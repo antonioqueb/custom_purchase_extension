@@ -8,8 +8,6 @@ class PurchaseOrder(models.Model):
     @api.model
     def create(self, vals):
         record = super(PurchaseOrder, self).create(vals)
-        if 'is_authorized' in vals:
-            self._log_authorization_change(record, vals['is_authorized'])
         self._update_sequence_prefix(record)
         return record
 
@@ -17,22 +15,19 @@ class PurchaseOrder(models.Model):
         if self.env.context.get('skip_update_prefix'):
             return super(PurchaseOrder, self).write(vals)
 
+        old_prefixes = {record.id: self._get_current_prefix(record) for record in self}
+
         res = super(PurchaseOrder, self).write(vals)
-        if 'is_authorized' in vals:
-            for record in self:
-                old_prefix = self._get_current_prefix(record)
+
+        for record in self:
+            if 'is_authorized' in vals:
                 self._log_authorization_change(record, vals['is_authorized'])
-                self._update_sequence_prefix(record)
-                new_prefix = self._get_current_prefix(record)
-                if old_prefix != new_prefix:
-                    self._log_prefix_change(record, old_prefix, new_prefix)
-        else:
-            for record in self:
-                old_prefix = self._get_current_prefix(record)
-                self._update_sequence_prefix(record)
-                new_prefix = self._get_current_prefix(record)
-                if old_prefix != new_prefix:
-                    self._log_prefix_change(record, old_prefix, new_prefix)
+            
+            new_prefix = self._get_current_prefix(record)
+            if old_prefixes[record.id] != new_prefix:
+                self._log_prefix_change(record, old_prefixes[record.id], new_prefix)
+            self._update_sequence_prefix(record)
+            
         return res
 
     def _log_authorization_change(self, record, new_value):
@@ -47,16 +42,14 @@ class PurchaseOrder(models.Model):
 
     def _update_sequence_prefix(self, record):
         new_name = None
-        current_prefix = self._get_current_prefix(record)
-
-        if not record.is_authorized and current_prefix != 'RDM':
+        if not record.is_authorized and not record.name.startswith('RDM'):
             new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft')
-        elif record.is_authorized and current_prefix == 'RDM':
+        elif record.is_authorized and record.name.startswith('RDM'):
             new_name = record.name.replace('RDM', 'OC')
-        elif record.state == 'purchase' and current_prefix == 'OC':
+        elif record.state == 'purchase' and record.name.startswith('OC'):
             new_name = record.name.replace('OC', 'PC')
 
-        if new_name:
+        if new_name and new_name != record.name:
             record.with_context(skip_update_prefix=True).write({'name': new_name})
             record.message_post(body="Nombre actualizado a: {}".format(new_name))
 
@@ -91,10 +84,11 @@ class PurchaseOrder(models.Model):
         return res
 
     def action_set_done(self):
+        res = super(PurchaseOrder, self).action_set_done()
         for order in self:
-            order.state = 'done'
             old_prefix = self._get_current_prefix(order)
             self._update_sequence_prefix(order)
             new_prefix = self._get_current_prefix(order)
             if old_prefix != new_prefix:
                 self._log_prefix_change(order, old_prefix, new_prefix)
+        return res
