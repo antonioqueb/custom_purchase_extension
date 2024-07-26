@@ -40,15 +40,16 @@ class PurchaseOrder(models.Model):
         record.message_post(body=message)
 
     def _update_sequence_prefix(self, record):
-        new_name = None
-        if not record.is_authorized:
-            new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft')
-        elif record.state == 'purchase':
-            new_name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed')
-        elif record.state == 'done':
-            new_name = self.env['ir.sequence'].next_by_code('purchase.order.done')
+        if not record.name:
+            if not record.is_authorized:
+                new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft') or 'RDM'
+            elif record.state == 'purchase':
+                new_name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed') or 'OC'
+            elif record.state == 'done':
+                new_name = self.env['ir.sequence'].next_by_code('purchase.order.done') or 'PC'
+            else:
+                new_name = 'RDM'  # Default prefix for drafts
 
-        if new_name:
             record.with_context(skip_update_prefix=True).write({'name': new_name})
 
     def _get_current_prefix(self, record):
@@ -79,3 +80,31 @@ class PurchaseOrder(models.Model):
             new_prefix = self._get_current_prefix(order)
             if old_prefix != new_prefix:
                 self._log_prefix_change(order, old_prefix, new_prefix)
+
+# Agregar las secuencias directamente en el método de inicialización del modelo
+def _create_sequences(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    if not env['ir.sequence'].search([('code', '=', 'purchase.order.draft')]):
+        env['ir.sequence'].create({
+            'name': 'Purchase Order Draft',
+            'code': 'purchase.order.draft',
+            'prefix': 'RDM',
+            'padding': 4,
+        })
+    if not env['ir.sequence'].search([('code', '=', 'purchase.order.confirmed')]):
+        env['ir.sequence'].create({
+            'name': 'Purchase Order Confirmed',
+            'code': 'purchase.order.confirmed',
+            'prefix': 'OC',
+            'padding': 4,
+        })
+    if not env['ir.sequence'].search([('code', '=', 'purchase.order.done')]):
+        env['ir.sequence'].create({
+            'name': 'Purchase Order Done',
+            'code': 'purchase.order.done',
+            'prefix': 'PC',
+            'padding': 4,
+        })
+
+def post_init_hook(cr, registry):
+    _create_sequences(cr, registry)
