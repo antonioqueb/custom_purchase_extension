@@ -10,7 +10,8 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def write(self, vals):
-        _logger.info("Escribiendo en Purchase Order con vals: %s", vals)
+        _logger.info("Entrando en el método write de PurchaseOrder con vals: %s", vals)
+        result = super(PurchaseOrder, self).write(vals)
         if 'is_authorized' in vals:
             for record in self:
                 old_value = record.is_authorized
@@ -22,12 +23,5 @@ class PurchaseOrder(models.Model):
                         'Autorizado' if new_value else 'No Autorizado'
                     )
                     _logger.info("Publicando mensaje: %s", message)
-                    # Crear el mensaje en el historial
-                    self.env['mail.message'].create({
-                        'body': message,
-                        'model': self._name,
-                        'res_id': record.id,
-                        'message_type': 'notification',
-                        'subtype_id': self.env.ref('mail.mt_note').id,
-                    })
-        return super(PurchaseOrder, self).write(vals)
+                    record.message_post(body=message)
+        return result
