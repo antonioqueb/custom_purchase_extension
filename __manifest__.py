@@ -1,6 +1,6 @@
 {
     'name': 'Custom Purchase Extension',
-    'version': '1.2',
+    'version': '1.3',
     'summary': 'Extension to add is_authorized field to Purchase Order',
     'description': 'This module adds a custom field to indicate if the purchase order is authorized.',
     'author': 'ALPHAQUEB CONSULTING S.A.S.',
