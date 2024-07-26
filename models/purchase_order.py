@@ -42,13 +42,13 @@ class PurchaseOrder(models.Model):
     def _update_sequence_prefix(self, record):
         if not record.name:
             if not record.is_authorized:
-                new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft') or 'RDM'
+                new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft') or 'RDM0000'
             elif record.state == 'purchase':
-                new_name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed') or 'OC'
+                new_name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed') or 'OC0000'
             elif record.state == 'done':
-                new_name = self.env['ir.sequence'].next_by_code('purchase.order.done') or 'PC'
+                new_name = self.env['ir.sequence'].next_by_code('purchase.order.done') or 'PC0000'
             else:
-                new_name = 'RDM'  # Default prefix for drafts
+                new_name = 'RDM0000'  # Default prefix for drafts
 
             record.with_context(skip_update_prefix=True).write({'name': new_name})
 
@@ -90,6 +90,7 @@ def _create_sequences(cr, registry):
             'code': 'purchase.order.draft',
             'prefix': 'RDM',
             'padding': 4,
+            'implementation': 'no_gap',
         })
     if not env['ir.sequence'].search([('code', '=', 'purchase.order.confirmed')]):
         env['ir.sequence'].create({
@@ -97,6 +98,7 @@ def _create_sequences(cr, registry):
             'code': 'purchase.order.confirmed',
             'prefix': 'OC',
             'padding': 4,
+            'implementation': 'no_gap',
         })
     if not env['ir.sequence'].search([('code', '=', 'purchase.order.done')]):
         env['ir.sequence'].create({
@@ -104,6 +106,7 @@ def _create_sequences(cr, registry):
             'code': 'purchase.order.done',
             'prefix': 'PC',
             'padding': 4,
+            'implementation': 'no_gap',
         })
 
 def post_init_hook(cr, registry):
