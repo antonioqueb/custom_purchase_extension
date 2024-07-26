@@ -16,7 +16,7 @@ class PurchaseOrder(models.Model):
     def write(self, vals):
         if self.env.context.get('skip_update_prefix'):
             return super(PurchaseOrder, self).write(vals)
-        
+
         res = super(PurchaseOrder, self).write(vals)
         if 'is_authorized' in vals:
             for record in self:
@@ -42,11 +42,11 @@ class PurchaseOrder(models.Model):
     def _update_sequence_prefix(self, record):
         new_name = None
         if not record.is_authorized:
-            new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft') or 'RDM'
+            new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft')
         elif record.state == 'purchase':
-            new_name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed') or 'OC'
+            new_name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed')
         elif record.state == 'done':
-            new_name = self.env['ir.sequence'].next_by_code('purchase.order.done') or 'PC'
+            new_name = self.env['ir.sequence'].next_by_code('purchase.order.done')
 
         if new_name:
             record.with_context(skip_update_prefix=True).write({'name': new_name})
