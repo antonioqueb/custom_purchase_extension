@@ -12,6 +12,9 @@ class PurchaseOrder(models.Model):
                 old_value = record.is_authorized
                 new_value = vals['is_authorized']
                 if old_value != new_value:
-                    message = "Authorization status changed from %s to %s" % (old_value, new_value)
+                    message = "El estado de autorización ha cambiado de %s a %s" % (
+                        'Autorizado' if old_value else 'No Autorizado', 
+                        'Autorizado' if new_value else 'No Autorizado'
+                    )
                     record.message_post(body=message)
         return super(PurchaseOrder, self).write(vals)
