@@ -22,5 +22,12 @@ class PurchaseOrder(models.Model):
                         'Autorizado' if new_value else 'No Autorizado'
                     )
                     _logger.info("Publicando mensaje: %s", message)
-                    record.message_post(body=message)
+                    # Crear el mensaje en el historial
+                    self.env['mail.message'].create({
+                        'body': message,
+                        'model': self._name,
+                        'res_id': record.id,
+                        'message_type': 'notification',
+                        'subtype_id': self.env.ref('mail.mt_note').id,
+                    })
         return super(PurchaseOrder, self).write(vals)
