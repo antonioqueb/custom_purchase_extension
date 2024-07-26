@@ -40,7 +40,6 @@ class PurchaseOrder(models.Model):
         elif record.state == 'done':
             record.name = self.env['ir.sequence'].next_by_code('purchase.order.done') or 'PC'
 
-    @api.multi
     def action_set_done(self):
         for order in self:
             order.state = 'done'
