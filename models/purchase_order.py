@@ -20,13 +20,19 @@ class PurchaseOrder(models.Model):
         res = super(PurchaseOrder, self).write(vals)
         if 'is_authorized' in vals:
             for record in self:
+                old_prefix = self._get_current_prefix(record)
                 self._log_authorization_change(record, vals['is_authorized'])
-        for record in self:
-            old_prefix = self._get_current_prefix(record)
-            self._update_sequence_prefix(record)
-            new_prefix = self._get_current_prefix(record)
-            if old_prefix != new_prefix:
-                self._log_prefix_change(record, old_prefix, new_prefix)
+                self._update_sequence_prefix(record)
+                new_prefix = self._get_current_prefix(record)
+                if old_prefix != new_prefix:
+                    self._log_prefix_change(record, old_prefix, new_prefix)
+        else:
+            for record in self:
+                old_prefix = self._get_current_prefix(record)
+                self._update_sequence_prefix(record)
+                new_prefix = self._get_current_prefix(record)
+                if old_prefix != new_prefix:
+                    self._log_prefix_change(record, old_prefix, new_prefix)
         return res
 
     def _log_authorization_change(self, record, new_value):
@@ -41,12 +47,14 @@ class PurchaseOrder(models.Model):
 
     def _update_sequence_prefix(self, record):
         new_name = None
-        if not record.is_authorized:
+        current_prefix = self._get_current_prefix(record)
+
+        if not record.is_authorized and current_prefix != 'RDM':
             new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft')
-        elif record.state == 'purchase':
-            new_name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed')
-        elif record.state == 'done':
-            new_name = self.env['ir.sequence'].next_by_code('purchase.order.done')
+        elif record.is_authorized and current_prefix == 'RDM':
+            new_name = record.name.replace('RDM', 'OC')
+        elif record.state == 'purchase' and current_prefix == 'OC':
+            new_name = record.name.replace('OC', 'PC')
 
         if new_name:
             record.with_context(skip_update_prefix=True).write({'name': new_name})
