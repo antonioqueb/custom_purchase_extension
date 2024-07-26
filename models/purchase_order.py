@@ -19,7 +19,11 @@ class PurchaseOrder(models.Model):
             for record in self:
                 self._log_authorization_change(record, vals['is_authorized'])
         for record in self:
+            old_prefix = self._get_current_prefix(record)
             self._update_sequence_prefix(record)
+            new_prefix = self._get_current_prefix(record)
+            if old_prefix != new_prefix:
+                self._log_prefix_change(record, old_prefix, new_prefix)
         return res
 
     def _log_authorization_change(self, record, new_value):
@@ -40,7 +44,31 @@ class PurchaseOrder(models.Model):
         elif record.state == 'done':
             record.name = self.env['ir.sequence'].next_by_code('purchase.order.done') or 'PC'
 
+    def _get_current_prefix(self, record):
+        if record.name.startswith('RDM'):
+            return 'RDM'
+        elif record.name.startswith('OC'):
+            return 'OC'
+        elif record.name.startswith('PC'):
+            return 'PC'
+        return ''
+
+    def _log_prefix_change(self, record, old_prefix, new_prefix):
+        user = self.env.user
+        timestamp = fields.Datetime.now()
+        message = "El prefijo de la orden cambió de: {} a {} por {} el {}".format(
+            old_prefix,
+            new_prefix,
+            user.name,
+            timestamp
+        )
+        record.message_post(body=message)
+
     def action_set_done(self):
         for order in self:
             order.state = 'done'
-            order._update_sequence_prefix()
+            old_prefix = self._get_current_prefix(order)
+            self._update_sequence_prefix(order)
+            new_prefix = self._get_current_prefix(order)
+            if old_prefix != new_prefix:
+                self._log_prefix_change(order, old_prefix, new_prefix)
