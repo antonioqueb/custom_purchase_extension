@@ -20,7 +20,7 @@ class PurchaseOrder(models.Model):
                 self._log_authorization_change(record, vals['is_authorized'])
         for record in self:
             old_prefix = self._get_current_prefix(record)
-            self._update_sequence_prefix(record)
+            self._update_sequence_prefix(record, avoid_write=True)
             new_prefix = self._get_current_prefix(record)
             if old_prefix != new_prefix:
                 self._log_prefix_change(record, old_prefix, new_prefix)
@@ -36,13 +36,20 @@ class PurchaseOrder(models.Model):
         )
         record.message_post(body=message)
 
-    def _update_sequence_prefix(self, record):
+    def _update_sequence_prefix(self, record, avoid_write=False):
+        new_name = None
         if not record.is_authorized:
-            record.name = self.env['ir.sequence'].next_by_code('purchase.order.draft') or 'RDM'
+            new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft') or 'RDM'
         elif record.state == 'purchase':
-            record.name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed') or 'OC'
+            new_name = self.env['ir.sequence'].next_by_code('purchase.order.confirmed') or 'OC'
         elif record.state == 'done':
-            record.name = self.env['ir.sequence'].next_by_code('purchase.order.done') or 'PC'
+            new_name = self.env['ir.sequence'].next_by_code('purchase.order.done') or 'PC'
+        
+        if new_name:
+            if avoid_write:
+                record.update({'name': new_name})
+            else:
+                record.name = new_name
 
     def _get_current_prefix(self, record):
         if record.name.startswith('RDM'):
@@ -68,7 +75,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             order.state = 'done'
             old_prefix = self._get_current_prefix(order)
-            self._update_sequence_prefix(order)
+            self._update_sequence_prefix(order, avoid_write=True)
             new_prefix = self._get_current_prefix(order)
             if old_prefix != new_prefix:
                 self._log_prefix_change(order, old_prefix, new_prefix)
