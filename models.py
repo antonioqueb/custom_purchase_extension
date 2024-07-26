@@ -8,7 +8,6 @@ class PurchaseOrder(models.Model):
 
     is_authorized = fields.Boolean(string='Autorizado', default=False)
 
-    @api.multi
     def write(self, vals):
         _logger.info("Entrando en el método write de PurchaseOrder con vals: %s", vals)
         result = super(PurchaseOrder, self).write(vals)
