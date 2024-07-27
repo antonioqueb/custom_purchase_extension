@@ -4,11 +4,21 @@ class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
     is_authorized = fields.Boolean(string='Autorizado', default=False)
+    planta = fields.Selection([
+        ('planta_1', 'Planta 1'),
+        ('planta_2', 'Planta 2'),
+        ('planta_3', 'Planta 3'),
+        ('planta_4', 'Planta 4'),
+        ('planta_5', 'Planta 5'),
+        ('planta_6', 'Planta 6'),
+    ], string='Planta', default='planta_1')
 
     @api.model
     def create(self, vals):
         record = super(PurchaseOrder, self).create(vals)
         self._update_sequence_prefix(record)
+        if 'planta' in vals:
+            self._log_planta_change(record, vals['planta'])
         return record
 
     def write(self, vals):
@@ -22,12 +32,15 @@ class PurchaseOrder(models.Model):
         for record in self:
             if 'is_authorized' in vals:
                 self._log_authorization_change(record, vals['is_authorized'])
-            
+
+            if 'planta' in vals:
+                self._log_planta_change(record, vals['planta'])
+
             new_prefix = self._get_current_prefix(record)
             if old_prefixes[record.id] != new_prefix:
                 self._log_prefix_change(record, old_prefixes[record.id], new_prefix)
             self._update_sequence_prefix(record)
-            
+
         return res
 
     def _log_authorization_change(self, record, new_value):
@@ -35,6 +48,16 @@ class PurchaseOrder(models.Model):
         timestamp = fields.Datetime.now()
         message = "El estado de autorización cambió a: {} por {} el {}".format(
             'Autorizado' if new_value else 'No Autorizado',
+            user.name,
+            timestamp
+        )
+        record.message_post(body=message)
+
+    def _log_planta_change(self, record, new_value):
+        user = self.env.user
+        timestamp = fields.Datetime.now()
+        message = "La planta se cambió a: {} por {} el {}".format(
+            dict(record._fields['planta'].selection).get(new_value),
             user.name,
             timestamp
         )
