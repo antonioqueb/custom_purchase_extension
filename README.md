@@ -1,4 +1,4 @@
-Aquí tienes el README con las vistas completas de formulario y lista, incluyendo las modificaciones que# Custom Purchase Extension
+# Custom Purchase Extension
 
 Este módulo extiende la funcionalidad del modelo `purchase.order` en Odoo, añadiendo campos adicionales a las vistas de formulario y lista.
 
