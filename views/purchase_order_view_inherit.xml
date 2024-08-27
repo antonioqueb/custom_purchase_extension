@@ -1,13 +1,13 @@
 <odoo>
     <data>
-    <!-- Heredar la vista de formulario de purchase.order -->
+        <!-- Heredar la vista de formulario de purchase.order -->
         <record id="view_order_form_inherit_custom" model="ir.ui.view">
             <field name="name">purchase.order.form.custom.inherit</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
-                <!-- Insertar el campo planta debajo del grupo con fecha de confirmación y entrega esperada -->
-                <xpath expr="//div[@name='reminder']" position="after">
+                <!-- Insertar el campo planta e is_authorized justo antes del notebook -->
+                <xpath expr="//notebook" position="before">
                     <group>
                         <field name="planta"/>
                         <field name="is_authorized"/>
