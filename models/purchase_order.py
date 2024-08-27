@@ -22,11 +22,24 @@ class PurchaseOrder(models.Model):
 
     @api.model
     def create(self, vals):
+        # Establece los valores predeterminados si no se han pasado explícitamente en 'vals'
+        if 'planta' not in vals:
+            vals['planta'] = 'planta_1'
+        if 'tipo' not in vals:
+            vals['tipo'] = 'tipo_2'
+        
+        # Crear el registro
         record = super(PurchaseOrder, self).create(vals)
+        
+        # Actualizar el prefijo de la secuencia
         self._update_sequence_prefix(record)
-        if 'planta' in vals:
-            self._log_planta_change(record, vals['planta'])
+        
+        # Registrar el cambio en planta y tipo al crear el registro
+        self._log_planta_change(record, vals['planta'])
+        self._log_tipo_change(record, vals['tipo'])
+        
         return record
+
 
     def write(self, vals):
         if self.env.context.get('skip_update_prefix'):
