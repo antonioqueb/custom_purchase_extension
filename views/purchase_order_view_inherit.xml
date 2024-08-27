@@ -1,31 +1,41 @@
 <odoo>
     <data>
+        <!-- Vista del formulario de Orden de Compra -->
         <record id="view_order_form_inherit_custom" model="ir.ui.view">
             <field name="name">purchase.order.form.custom.inherit</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
+                <!-- Añadiendo el campo 'planta' después del campo 'partner_id' -->
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="planta"/>
                 </xpath>
+                <!-- Añadiendo el campo 'is_authorized' después de 'date_planned' -->
                 <xpath expr="//field[@name='date_planned']" position="after">
                     <field name="is_authorized"/>
                 </xpath>
             </field>
+            <!-- Ajustar la prioridad para asegurar que se cargue después de la vista base -->
+            <field name="priority" eval="20"/>
         </record>
 
+        <!-- Vista de árbol de Orden de Compra -->
         <record id="view_order_tree_inherit_custom" model="ir.ui.view">
             <field name="name">purchase.order.tree.custom.inherit</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_tree"/>
             <field name="arch" type="xml">
+                <!-- Añadiendo el campo 'planta' después de 'date_order' -->
                 <xpath expr="//field[@name='date_order']" position="after">
                     <field name="planta"/>
                 </xpath>
+                <!-- Añadiendo el campo 'is_authorized' después de 'amount_total' -->
                 <xpath expr="//field[@name='amount_total']" position="after">
                     <field name="is_authorized"/>
                 </xpath>
             </field>
+            <!-- Ajustar la prioridad para asegurar que se cargue después de la vista base -->
+            <field name="priority" eval="20"/>
         </record>
     </data>
 </odoo>
