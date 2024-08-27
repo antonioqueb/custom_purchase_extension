@@ -13,7 +13,6 @@ class PurchaseOrder(models.Model):
         ('planta_6', 'Planta 6'),
     ], string='Planta', default='planta_1')
 
-
     tipo = fields.Selection([
         ('tipo_1', 'Mantenimiento'),
         ('tipo_2', 'Materia prima'),
@@ -22,24 +21,17 @@ class PurchaseOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        # Establece los valores predeterminados si no se han pasado explícitamente en 'vals'
         if 'planta' not in vals:
             vals['planta'] = 'planta_1'
         if 'tipo' not in vals:
             vals['tipo'] = 'tipo_2'
-        
-        # Crear el registro
+
         record = super(PurchaseOrder, self).create(vals)
-        
-        # Actualizar el prefijo de la secuencia
         self._update_sequence_prefix(record)
-        
-        # Registrar el cambio en planta y tipo al crear el registro
         self._log_planta_change(record, vals['planta'])
         self._log_tipo_change(record, vals['tipo'])
-        
-        return record
 
+        return record
 
     def write(self, vals):
         if self.env.context.get('skip_update_prefix'):
@@ -51,10 +43,8 @@ class PurchaseOrder(models.Model):
         for record in self:
             if 'is_authorized' in vals:
                 self._log_authorization_change(record, vals['is_authorized'])
-
             if 'planta' in vals:
                 self._log_planta_change(record, vals['planta'])
-
             if 'tipo' in vals:
                 self._log_tipo_change(record, vals['tipo'])
 
@@ -64,7 +54,6 @@ class PurchaseOrder(models.Model):
             self._update_sequence_prefix(record)
 
         return res
-
 
     def _log_authorization_change(self, record, new_value):
         user = self.env.user
@@ -99,29 +88,22 @@ class PurchaseOrder(models.Model):
     def _update_sequence_prefix(self, record):
         new_name = None
 
-        # Si la orden no está autorizada y no está confirmada, debe mantener el prefijo RDM
         if not record.is_authorized and record.state != 'purchase':
             if not record.name.startswith('RDM'):
                 new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft')
-        
-        # Si la orden es autorizada o confirmada (cualquiera de los dos), cambiar a OC si está en RDM
+
         elif (record.is_authorized or record.state == 'purchase') and record.name.startswith('RDM'):
             new_name = record.name.replace('RDM', 'OC')
-        
-        # Si la orden está confirmada y autorizada, cambiar a PC
+
         if record.is_authorized and record.state == 'purchase' and not record.name.startswith('PC'):
             if record.name.startswith('RDM'):
                 new_name = record.name.replace('RDM', 'PC')
             elif record.name.startswith('OC'):
                 new_name = record.name.replace('OC', 'PC')
 
-        # Aplicar el cambio de nombre si es necesario
         if new_name and new_name != record.name:
             record.with_context(skip_update_prefix=True).write({'name': new_name})
             record.message_post(body="Nombre actualizado a: {}".format(new_name))
-
-
-
 
     def _get_current_prefix(self, record):
         if record.name.startswith('RDM'):
@@ -162,3 +144,18 @@ class PurchaseOrder(models.Model):
             if old_prefix != new_prefix:
                 self._log_prefix_change(order, old_prefix, new_prefix)
         return res
+
+    # Sobreescribimos name_get para personalizar el nombre en función del prefijo
+    def name_get(self):
+        result = []
+        for record in self:
+            if record.name.startswith('RDM'):
+                name = "Requerimiento de Material: {}".format(record.name)
+            elif record.name.startswith('OC'):
+                name = "Orden de Compra: {}".format(record.name)
+            elif record.name.startswith('PC'):
+                name = "Pedido de Compra: {}".format(record.name)
+            else:
+                name = record.name
+            result.append((record.id, name))
+        return result
