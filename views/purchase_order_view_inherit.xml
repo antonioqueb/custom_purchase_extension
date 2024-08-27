@@ -36,7 +36,7 @@
                         <field name="name" string="Referencia" readonly="1" decoration-bf="1" decoration-info="state in ('draft','sent')"/>
                             <!-- Mostrar el campo custom_state_display como una etiqueta visual (badge) -->
                         <field name="custom_state_display" widget="badge" readonly="1"/>
-                        <field name="date_approve" widget="date" column_invisible="context.get('quotation_only', False)" optional="show"/>
+                        <field name="date_approve" widget="date" column_invisible="context.get('quotation_only', False)" optional="hide"/>
                          <!-- Mostrar el campo is_authorized como etiqueta con un botón booleano estilizado -->
                         <field name="is_authorized" widget="boolean_button" options="{'inverse': 'danger'}" readonly="1"/>
                         <!-- Mostrar el campo tipo como etiqueta con colores -->
@@ -92,7 +92,7 @@
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="partner_ref" optional="hide"/>
-                    <field name="name" string="Referencia" readonly="1" decoration-bf="1" optional="hide"/>
+                    <field name="name" string="Referencia" readonly="1" decoration-bf="1" optional="show"/>
                     <field name="custom_state_display" widget="badge" readonly="1" optional="hide"/>
                     <field name="date_approve" column_invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="is_authorized" widget="boolean_button" options="{'inverse': 'danger'}" readonly="1" optional="show"/>
@@ -110,8 +110,8 @@
                     <field name="company_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']" optional="hide"/>
                     <field name="user_id" optional="show" widget="many2one_avatar_user"/>
                     <field name="date_order" column_invisible="not context.get('quotation_only', False)" readonly="state in ['cancel', 'done', 'purchase']"
-                        widget="remaining_days" optional="show"/>
-                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                        widget="remaining_days" optional="hide"/>
+                    <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="origin" optional="show"/>
                     <field name="amount_untaxed" sum="Total importe base" string="Sin impuestos" widget="monetary" optional="hide"/>
                 </tree>
