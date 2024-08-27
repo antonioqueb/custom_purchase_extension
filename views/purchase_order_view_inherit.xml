@@ -25,8 +25,11 @@
             <field name="arch" type="xml">
                 <!-- Insertar los nuevos campos dentro del árbol -->
                 <xpath expr="//tree" position="inside">
-                    <!-- Mostrar el campo custom_state_display para el estado personalizado -->
-                    <field name="custom_state_display" readonly="1"/>
+                    <!-- Ocultar el campo original de estado -->
+                    <field name="state" invisible="1"/>
+                    
+                    <!-- Mostrar el campo custom_state_display como una etiqueta visual (badge) -->
+                    <field name="custom_state_display" widget="badge" readonly="1"/>
                     
                     <!-- Mostrar el campo planta como etiqueta con colores -->
                     <field name="planta" widget="badge" decoration-info="planta == 'planta_1'" decoration-success="planta == 'planta_2'"
@@ -51,8 +54,11 @@
             <field name="arch" type="xml">
                 <!-- Insertar los nuevos campos dentro del árbol de cotizaciones -->
                 <xpath expr="//tree" position="inside">
-                    <!-- Mostrar el campo custom_state_display para el estado personalizado -->
-                    <field name="custom_state_display" readonly="1"/>
+                    <!-- Ocultar el campo original de estado -->
+                    <field name="state" invisible="1"/>
+                    
+                    <!-- Mostrar el campo custom_state_display como una etiqueta visual (badge) -->
+                    <field name="custom_state_display" widget="badge" readonly="1"/>
                     
                     <!-- Mostrar el campo planta como etiqueta con colores -->
                     <field name="planta" widget="badge" decoration-info="planta == 'planta_1'" decoration-success="planta == 'planta_2'"
