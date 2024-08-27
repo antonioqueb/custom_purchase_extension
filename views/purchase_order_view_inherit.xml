@@ -1,20 +1,19 @@
 <odoo>
     <data>
-        <!-- Vista del formulario de Orden de Compra -->
+    <!-- Heredar la vista de formulario de purchase.order -->
         <record id="view_order_form_inherit_custom" model="ir.ui.view">
             <field name="name">purchase.order.form.custom.inherit</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
-                <!-- Añadiendo un nuevo grupo al final del formulario para los campos 'planta' e 'is_authorized' -->
-                <xpath expr="//sheet" position="inside">
-                    <group string="Información Adicional">
+                <!-- Insertar el campo planta debajo del grupo con fecha de confirmación y entrega esperada -->
+                <xpath expr="//div[@name='reminder']" position="after">
+                    <group>
                         <field name="planta"/>
                         <field name="is_authorized"/>
                     </group>
                 </xpath>
             </field>
-            <field name="priority" eval="20"/>
         </record>
 
         <!-- Vista de árbol de Orden de Compra -->
