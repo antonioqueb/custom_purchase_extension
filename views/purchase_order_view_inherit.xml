@@ -24,11 +24,9 @@
             <field name="inherit_id" ref="purchase.purchase_order_tree"/>
             <field name="arch" type="xml">
                 <!-- Añadiendo los campos 'planta', 'tipo' e 'is_authorized' en la vista de árbol -->
-                <xpath expr="//field[@name='date_order']" position="after">
+                <xpath expr="//field[@name='invoice_status']" position="after">
                     <field name="planta" optional="show"/>
                     <field name="tipo" optional="show"/>
-                </xpath>
-                <xpath expr="//field[@name='amount_total']" position="after">
                     <field name="is_authorized" optional="show"/>
                 </xpath>
             </field>
