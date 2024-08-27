@@ -13,6 +13,13 @@ class PurchaseOrder(models.Model):
         ('planta_6', 'Planta 6'),
     ], string='Planta', default='planta_1')
 
+
+    tipo = fields.Selection([
+        ('tipo_1', 'Mantenimiento'),
+        ('tipo_2', 'Materia prima'),
+        ('tipo_3', 'Consumibles'),
+    ], string='Tipo', default='tipo_2')
+
     @api.model
     def create(self, vals):
         record = super(PurchaseOrder, self).create(vals)
@@ -26,7 +33,6 @@ class PurchaseOrder(models.Model):
             return super(PurchaseOrder, self).write(vals)
 
         old_prefixes = {record.id: self._get_current_prefix(record) for record in self}
-
         res = super(PurchaseOrder, self).write(vals)
 
         for record in self:
@@ -36,12 +42,16 @@ class PurchaseOrder(models.Model):
             if 'planta' in vals:
                 self._log_planta_change(record, vals['planta'])
 
+            if 'tipo' in vals:
+                self._log_tipo_change(record, vals['tipo'])
+
             new_prefix = self._get_current_prefix(record)
             if old_prefixes[record.id] != new_prefix:
                 self._log_prefix_change(record, old_prefixes[record.id], new_prefix)
             self._update_sequence_prefix(record)
 
         return res
+
 
     def _log_authorization_change(self, record, new_value):
         user = self.env.user
@@ -62,6 +72,17 @@ class PurchaseOrder(models.Model):
             timestamp
         )
         record.message_post(body=message)
+
+    def _log_tipo_change(self, record, new_value):
+        user = self.env.user
+        timestamp = fields.Datetime.now()
+        message = "El tipo de orden se cambió a: {} por {} el {}".format(
+            dict(record._fields['tipo'].selection).get(new_value),
+            user.name,
+            timestamp
+        )
+        record.message_post(body=message)
+
 
     def _update_sequence_prefix(self, record):
         new_name = None
