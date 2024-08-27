@@ -42,29 +42,48 @@
             </field>
         </record>
 
-        <!-- Heredar la vista de árbol para cotizaciones (KPIs) -->
+ <!-- Heredar la vista de árbol para cotizaciones (KPIs) -->
         <record id="view_order_tree_kpis_inherit_custom" model="ir.ui.view">
             <field name="name">purchase.order.kpis.tree.custom.inherit</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
             <field name="arch" type="xml">
+                <!-- Reemplazar el nodo <tree> completo en la vista de KPIs -->
                 <xpath expr="//tree" position="replace">
-                    <!-- Eliminar la columna de estado original -->
-                    
-                    <!-- Mostrar el campo custom_state_display como una etiqueta visual (badge) -->
-                    <field name="custom_state_display" widget="badge" readonly="1" field_id="custom_state_display_0"/>
-                    
-                    <!-- Mostrar el campo planta como etiqueta con colores -->
-                    <field name="planta" widget="badge" decoration-info="planta == 'planta_1'" decoration-success="planta == 'planta_2'"
-                        decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
-                        decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1" field_id="planta_0"/>
-                    
-                    <!-- Mostrar el campo tipo como etiqueta con colores -->
-                    <field name="tipo" widget="badge" decoration-info="tipo == 'tipo_1'" decoration-success="tipo == 'tipo_2'"
-                        decoration-danger="tipo == 'tipo_3'" optional="show" readonly="1" field_id="tipo_0"/>
-
-                    <!-- Mostrar el campo is_authorized como etiqueta con un botón booleano estilizado -->
-                    <field name="is_authorized" widget="boolean_button" options="{'inverse': 'danger'}" readonly="1" field_id="is_authorized_0"/>
+                    <tree string="Cotizaciones KPIs" decoration-info="state in ['draft', 'sent']" decoration-muted="state == 'cancel'">
+                        <header>
+                            <button name="action_create_invoice" type="object" string="Crear facturas"/>
+                        </header>
+                        <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                        <field name="partner_ref" optional="hide"/>
+                        <field name="name" string="Referencia" readonly="1" decoration-bf="1"/>
+                        <field name="date_approve" column_invisible="context.get('quotation_only', False)" optional="show"/>
+                        <field name="partner_id" readonly="1"/>
+                        <field name="company_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
+                        <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
+                        <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                        <field name="date_order" invisible="state == 'purchase' or state == 'done' or state == 'cancel'" column_invisible="not context.get('quotation_only', False)" readonly="state in ['cancel', 'done', 'purchase']" widget="remaining_days" optional="show"/>
+                        <field name="activity_ids" widget="list_activity" optional="show"/>
+                        <field name="origin" optional="show"/>
+                        <field name="amount_untaxed" sum="Total importe base" string="Sin impuestos" widget="monetary" optional="hide"/>
+                        <field name="amount_total" sum="Importe total" widget="monetary" optional="show" decoration-bf="state in ['purchase', 'done']"/>
+                        <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
+                        
+                        <!-- Mostrar el campo custom_state_display como una etiqueta visual (badge) -->
+                        <field name="custom_state_display" widget="badge" readonly="1"/>
+                        
+                        <!-- Mostrar el campo planta como etiqueta con colores -->
+                        <field name="planta" widget="badge" decoration-info="planta == 'planta_1'" decoration-success="planta == 'planta_2'"
+                            decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
+                            decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
+                        
+                        <!-- Mostrar el campo tipo como etiqueta con colores -->
+                        <field name="tipo" widget="badge" decoration-info="tipo == 'tipo_1'" decoration-success="tipo == 'tipo_2'"
+                            decoration-danger="tipo == 'tipo_3'" optional="show" readonly="1"/>
+                        
+                        <!-- Mostrar el campo is_authorized como etiqueta con un botón booleano estilizado -->
+                        <field name="is_authorized" widget="boolean_button" options="{'inverse': 'danger'}" readonly="1"/>
+                    </tree>
                 </xpath>
             </field>
         </record>
