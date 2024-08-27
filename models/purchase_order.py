@@ -96,21 +96,20 @@ class PurchaseOrder(models.Model):
         )
         record.message_post(body=message)
 
-
     def _update_sequence_prefix(self, record):
         new_name = None
 
-        # Mantener el prefijo RDM si la orden no está autorizada
-        if not record.is_authorized:
+        # Si la orden no está autorizada y no está confirmada, debe mantener el prefijo RDM
+        if not record.is_authorized and record.state != 'purchase':
             if not record.name.startswith('RDM'):
                 new_name = self.env['ir.sequence'].next_by_code('purchase.order.draft')
         
-        # Si la orden está autorizada y no está confirmada, cambiamos de RDM a OC
-        elif record.is_authorized and not record.state == 'purchase' and record.name.startswith('RDM'):
+        # Si la orden es autorizada o confirmada (cualquiera de los dos), cambiar a OC si está en RDM
+        elif (record.is_authorized or record.state == 'purchase') and record.name.startswith('RDM'):
             new_name = record.name.replace('RDM', 'OC')
         
-        # Si la orden está confirmada y autorizada, cambiamos de OC a PC
-        elif record.state == 'purchase' and record.is_authorized and not record.name.startswith('PC'):
+        # Si la orden está confirmada y autorizada, cambiar a PC
+        if record.is_authorized and record.state == 'purchase' and not record.name.startswith('PC'):
             if record.name.startswith('RDM'):
                 new_name = record.name.replace('RDM', 'PC')
             elif record.name.startswith('OC'):
@@ -120,6 +119,7 @@ class PurchaseOrder(models.Model):
         if new_name and new_name != record.name:
             record.with_context(skip_update_prefix=True).write({'name': new_name})
             record.message_post(body="Nombre actualizado a: {}".format(new_name))
+
 
 
 
