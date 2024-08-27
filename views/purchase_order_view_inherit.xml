@@ -17,13 +17,13 @@
             </field>
         </record>
 
-        <!-- Vista de árbol de Orden de Compra -->
+        <!-- Heredar la vista de árbol de purchase.order -->
         <record id="view_order_tree_inherit_custom" model="ir.ui.view">
             <field name="name">purchase.order.tree.custom.inherit</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_tree"/>
             <field name="arch" type="xml">
-                <!-- Añadiendo los campos 'planta', 'tipo' e 'is_authorized' en la vista de árbol -->
+                <!-- Añadiendo los campos 'planta', 'tipo' e 'is_authorized' después de 'invoice_status' -->
                 <xpath expr="//field[@name='invoice_status']" position="after">
                     <field name="planta" optional="show"/>
                     <field name="tipo" optional="show"/>
