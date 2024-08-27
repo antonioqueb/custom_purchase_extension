@@ -19,6 +19,9 @@ class PurchaseOrder(models.Model):
         ('tipo_3', 'Consumibles'),
     ], string='Tipo', default='tipo_2')
 
+    # Nuevo campo calculado para mostrar el estado personalizado
+    custom_state_display = fields.Char(string='Estado Personalizado', compute='_compute_custom_state_display')
+
     @api.model
     def create(self, vals):
         if 'planta' not in vals:
@@ -145,17 +148,14 @@ class PurchaseOrder(models.Model):
                 self._log_prefix_change(order, old_prefix, new_prefix)
         return res
 
-    # Sobreescribimos name_get para personalizar el nombre en función del prefijo
-    def name_get(self):
-        result = []
+    @api.depends('name')
+    def _compute_custom_state_display(self):
         for record in self:
             if record.name.startswith('RDM'):
-                name = "Requerimiento de Material: {}".format(record.name)
+                record.custom_state_display = "Requerimiento de Material"
             elif record.name.startswith('OC'):
-                name = "Orden de Compra: {}".format(record.name)
+                record.custom_state_display = "Orden de Compra"
             elif record.name.startswith('PC'):
-                name = "Pedido de Compra: {}".format(record.name)
+                record.custom_state_display = "Pedido de Compra"
             else:
-                name = record.name
-            result.append((record.id, name))
-        return result
+                record.custom_state_display = "Borrador"
