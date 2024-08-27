@@ -48,21 +48,23 @@
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="inside">
+                <xpath expr="//tree" position="replace">
+                    <!-- Eliminar la columna de estado original -->
+                    
                     <!-- Mostrar el campo custom_state_display como una etiqueta visual (badge) -->
-                    <field name="custom_state_display" widget="badge" readonly="1"/>
+                    <field name="custom_state_display" widget="badge" readonly="1" field_id="custom_state_display_0"/>
                     
                     <!-- Mostrar el campo planta como etiqueta con colores -->
                     <field name="planta" widget="badge" decoration-info="planta == 'planta_1'" decoration-success="planta == 'planta_2'"
                         decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
-                        decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
-
+                        decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1" field_id="planta_0"/>
+                    
                     <!-- Mostrar el campo tipo como etiqueta con colores -->
                     <field name="tipo" widget="badge" decoration-info="tipo == 'tipo_1'" decoration-success="tipo == 'tipo_2'"
-                        decoration-danger="tipo == 'tipo_3'" optional="show" readonly="1"/>
+                        decoration-danger="tipo == 'tipo_3'" optional="show" readonly="1" field_id="tipo_0"/>
 
                     <!-- Mostrar el campo is_authorized como etiqueta con un botón booleano estilizado -->
-                    <field name="is_authorized" widget="boolean_button" options="{'inverse': 'danger'}" readonly="1"/>
+                    <field name="is_authorized" widget="boolean_button" options="{'inverse': 'danger'}" readonly="1" field_id="is_authorized_0"/>
                 </xpath>
             </field>
         </record>
