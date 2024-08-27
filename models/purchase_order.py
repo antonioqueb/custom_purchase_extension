@@ -20,7 +20,7 @@ class PurchaseOrder(models.Model):
     ], string='Tipo', default='tipo_2')
 
     # Nuevo campo calculado para mostrar el estado personalizado
-    custom_state_display = fields.Char(string='Estado Personalizado', compute='_compute_custom_state_display')
+    custom_state_display = fields.Char(string='Estado Compra', compute='_compute_custom_state_display')
 
     @api.model
     def create(self, vals):
