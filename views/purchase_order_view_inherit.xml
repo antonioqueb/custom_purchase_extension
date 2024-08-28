@@ -89,7 +89,12 @@
                 <tree string="Cotizaciones KPIs">
                     <header>
                         <button name="action_create_invoice" type="object" string="Crear facturas"/>
+                        <!-- Agregar KPIs personalizados -->
+                        <button type="object" string="KPI Importe Total: ${object.kpi_total_amount}" invisible="context.get('kpi_total_amount', False)"/>
+                        <button type="object" string="KPI Número de Órdenes: ${object.kpi_order_count}" invisible="context.get('kpi_order_count', False)"/>
                     </header>
+
+                    <!-- Campos de la tabla -->
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Referencia" readonly="1" decoration-bf="1" optional="show"/>
@@ -118,6 +123,7 @@
             </xpath>
         </field>
     </record>
+
 
     </data>
 </odoo>

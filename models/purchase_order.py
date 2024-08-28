@@ -2,6 +2,19 @@ from odoo import models, fields, api
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
+     # Definir los campos KPI
+    kpi_total_amount = fields.Monetary(string="Importe Total", compute="_compute_kpi_total_amount", currency_field="currency_id", store=True)
+    kpi_order_count = fields.Integer(string="Número de Órdenes", compute="_compute_kpi_order_count", store=True)
+
+    @api.depends('amount_total')
+    def _compute_kpi_total_amount(self):
+        for order in self:
+            order.kpi_total_amount = order.amount_total
+
+    @api.depends('partner_id')
+    def _compute_kpi_order_count(self):
+        for order in self:
+            order.kpi_order_count = self.search_count([('partner_id', '=', order.partner_id.id)])
 
     is_authorized = fields.Boolean(string='Autorizado', default=False)
     planta = fields.Selection([
