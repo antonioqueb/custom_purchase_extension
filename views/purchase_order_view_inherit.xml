@@ -86,12 +86,12 @@
         <field name="arch" type="xml">
             <!-- Reemplazar el nodo <tree> completo en la vista de KPIs -->
             <xpath expr="//tree" position="replace">
-                <tree string="Cotizaciones KPIs">
+                <tree string="KPIs">
                     <header>
                         <button name="action_create_invoice" type="object" string="Crear facturas"/>
                         <!-- Agregar KPIs personalizados -->
-                        <button type="object" string="KPI Importe Total: ${object.kpi_total_amount}" invisible="context.get('kpi_total_amount', False)"/>
-                        <button type="object" string="KPI Número de Órdenes: ${object.kpi_order_count}" invisible="context.get('kpi_order_count', False)"/>
+                        <button type="object" string="Importe Total: ${object.kpi_total_amount}" invisible="context.get('kpi_total_amount', False)"/>
+                        <button type="object" string="Número de Órdenes: ${object.kpi_order_count}" invisible="context.get('kpi_order_count', False)"/>
                     </header>
 
                     <!-- Campos de la tabla -->
