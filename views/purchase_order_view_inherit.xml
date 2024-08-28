@@ -97,7 +97,7 @@
                     <field name="date_approve" column_invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="is_authorized" widget="boolean_button" options="{'inverse': 'danger'}" readonly="1" optional="show"/>
                     <field name="tipo" widget="badge" decoration-info="tipo == 'tipo_1'" decoration-success="tipo == 'tipo_2'"
-                        decoration-danger="tipo == 'tipo_3'" optional="show" readonly="1"/>
+                        decoration-danger="tipo == 'tipo_3'" readonly="1"/>
                     <field name="planta" widget="badge" decoration-info="planta == 'planta_1'" decoration-success="planta == 'planta_2'"
                         decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
                         decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
