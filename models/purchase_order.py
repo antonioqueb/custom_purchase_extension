@@ -152,7 +152,7 @@ class PurchaseOrder(models.Model):
     def _compute_custom_state_display(self):
         for record in self:
             if record.name.startswith('RDM'):
-                record.custom_state_display = "Requerimiento de Material"
+                record.custom_state_display = "Requisición de Mercancías"
             elif record.name.startswith('OC'):
                 record.custom_state_display = "Orden de Compra"
             elif record.name.startswith('PC'):
