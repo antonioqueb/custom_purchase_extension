@@ -34,7 +34,8 @@ class PurchaseOrder(models.Model):
 
     # Nuevo campo calculado para mostrar el estado personalizado
     custom_state_display = fields.Char(string='Estado Compra', compute='_compute_custom_state_display')
-
+    custom_delivery_address = fields.Char(string='Dirección de Entrega')
+   
     @api.model
     def create(self, vals):
         if 'planta' not in vals:
