@@ -24,6 +24,7 @@ class PurchaseOrder(models.Model):
         ('planta_4', 'Planta 4'),
         ('planta_5', 'Planta 5'),
         ('planta_6', 'Planta 6'),
+        ('planta_7', 'Planta 7'),
     ], string='Planta', default='planta_1')
 
     tipo = fields.Selection([
