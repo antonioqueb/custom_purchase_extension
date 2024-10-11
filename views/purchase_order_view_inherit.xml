@@ -9,6 +9,7 @@
                 <!-- Insertar los campos planta, is_authorized y tipo justo antes del notebook -->
                 <xpath expr="//notebook" position="before">
                     <group>
+                        <field name="custom_delivery_address"/>
                         <field name="is_authorized"/>
                         <field name="planta"/>
                         <field name="tipo"/>
