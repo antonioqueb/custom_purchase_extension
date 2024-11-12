@@ -18,6 +18,7 @@ class PurchaseOrder(models.Model):
 
     is_authorized = fields.Boolean(string='Autorizado', default=False)
     planta = fields.Selection([
+        ('none', 'Selecciona Planta...'),  
         ('planta_1', 'Planta 1'),
         ('planta_2', 'Planta 2'),
         ('planta_3', 'Planta 3'),
@@ -25,17 +26,30 @@ class PurchaseOrder(models.Model):
         ('planta_5', 'Planta 5'),
         ('planta_6', 'Planta 6'),
         ('planta_7', 'Planta 7'),
-    ], string='Planta', default='planta_1')
+    ], string='Planta', default='none', required=False)  
 
     tipo = fields.Selection([
+        ('none', 'Selecciona Tipo...'),
         ('tipo_1', 'Mantenimiento'),
         ('tipo_2', 'Materia prima'),
         ('tipo_3', 'Consumibles'),
-    ], string='Tipo', default='tipo_2')
+], string='Tipo', default='none', required=False)
+
 
     # Nuevo campo calculado para mostrar el estado personalizado
     custom_state_display = fields.Char(string='Estado Compra', compute='_compute_custom_state_display')
     custom_delivery_address = fields.Char(string='Dirección de Entrega')
+    # Campo para el Área
+    custom_area = fields.Selection([
+        ('none', 'Selecciona un área...'),  
+        ('rh', 'Recursos Humanos'),
+        ('seguridad', 'Seguridad'),
+        ('mantenimiento_oper', 'Mantenimiento Operativo'),
+        ('mantenimiento_gral', 'Mantenimiento General'),
+        ('sac', 'Servicio de Atención al Cliente'),
+    ], string='Área', default='none', required=False)
+
+
    
     @api.model
     def create(self, vals):
