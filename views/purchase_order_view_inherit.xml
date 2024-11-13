@@ -6,13 +6,14 @@
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
-                <!-- Insertar los campos planta, is_authorized y tipo justo antes del notebook -->
+                <!-- Insertar los campos planta, is_authorized, tipo y custom_area justo antes del notebook -->
                 <xpath expr="//notebook" position="before">
                     <group>
                         <field name="custom_delivery_address"/>
                         <field name="is_authorized"/>
                         <field name="planta"/>
                         <field name="tipo"/>
+                        <field name="custom_area"/>
                     </group>
                     <!-- Nuevo grupo para los campos de vinculación de entidad -->
                     <group string="Vinculación de Entidad">
@@ -51,6 +52,7 @@
                         <field name="planta" widget="badge" decoration-info="planta == 'planta_1'" decoration-success="planta == 'planta_2'"
                             decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
                             decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
+                        <field name="custom_area" optional="show"/>
                         <field name="entity_type" widget="selection" readonly="1" optional="show"/>
                         <field name="amount_total" sum="Importe total" widget="monetary" optional="show" decoration-bf="1"/>
                         <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
@@ -94,6 +96,7 @@
                         <field name="planta" widget="badge" decoration-info="planta == 'planta_1'" decoration-success="planta == 'planta_2'"
                             decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
                             decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
+                        <field name="custom_area" optional="show"/>
                         <field name="entity_type" widget="selection" readonly="1" optional="show"/>
                         <field name="amount_total" sum="Importe total" widget="monetary" optional="show" decoration-bf="1"/>
                         <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']" optional="hide"/>
