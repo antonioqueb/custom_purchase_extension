@@ -19,7 +19,7 @@
                     <group string="Vinculación de Entidad">
                         <field name="entity_type"/>
                         <field name="machine_id" invisible="entity_type != 'machine'"/>
-                        <field name="user_id" invisible="entity_type != 'user'" domain="[('groups_id', 'in', [ref('base.group_user')])]"/>
+                        <field name="user_id" invisible="entity_type != 'user'" domain="[('groups_id.name', '=', 'Internal User')]"/>
                         <field name="event_id" invisible="entity_type != 'event'"/>
                         <field name="project_id" invisible="entity_type != 'project'"/>
                         <field name="task_id" invisible="entity_type != 'task'"/>
@@ -28,6 +28,7 @@
                 </xpath>
             </field>
         </record>
+
 
 
 
