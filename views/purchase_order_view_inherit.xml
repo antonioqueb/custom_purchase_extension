@@ -19,7 +19,7 @@
                     <group string="Vinculación de Entidad">
                         <field name="entity_type"/>
                         <field name="machine_id" invisible="entity_type != 'machine'"/>
-                        <field name="user_id" invisible="entity_type != 'user'"/>
+                        <field name="user_id" invisible="entity_type != 'user'" domain="[('active', '=', True)]"/>
                         <field name="event_id" invisible="entity_type != 'event'"/>
                         <field name="project_id" invisible="entity_type != 'project'"/>
                         <field name="task_id" invisible="entity_type != 'task'"/>
@@ -28,6 +28,7 @@
                 </xpath>
             </field>
         </record>
+
 
         <!-- Heredar la vista de árbol de purchase.order -->
         <record id="view_order_tree_inherit_custom" model="ir.ui.view">
