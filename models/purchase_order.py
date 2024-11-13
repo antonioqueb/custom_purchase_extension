@@ -2,7 +2,8 @@ from odoo import models, fields, api
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
-     # Definir los campos KPI
+
+    # Definir los campos KPI
     kpi_total_amount = fields.Monetary(string="Importe Total", compute="_compute_kpi_total_amount", currency_field="currency_id", store=True)
     kpi_order_count = fields.Integer(string="Número de Órdenes", compute="_compute_kpi_order_count", store=True)
 
@@ -33,8 +34,7 @@ class PurchaseOrder(models.Model):
         ('tipo_1', 'Mantenimiento'),
         ('tipo_2', 'Materia prima'),
         ('tipo_3', 'Consumibles'),
-], string='Tipo', default='none', required=False)
-
+    ], string='Tipo', default='none', required=False)
 
     # Nuevo campo calculado para mostrar el estado personalizado
     custom_state_display = fields.Char(string='Estado Compra', compute='_compute_custom_state_display')
@@ -49,8 +49,6 @@ class PurchaseOrder(models.Model):
         ('sac', 'Servicio de Atención al Cliente'),
     ], string='Área', default='none', required=False)
 
-
-   
     @api.model
     def create(self, vals):
         if 'planta' not in vals:
@@ -79,6 +77,8 @@ class PurchaseOrder(models.Model):
                 self._log_planta_change(record, vals['planta'])
             if 'tipo' in vals:
                 self._log_tipo_change(record, vals['tipo'])
+            if 'custom_area' in vals:
+                self._log_custom_area_change(record, vals['custom_area'])
 
             new_prefix = self._get_current_prefix(record)
             if old_prefixes[record.id] != new_prefix:
@@ -112,6 +112,16 @@ class PurchaseOrder(models.Model):
         timestamp = fields.Datetime.now()
         message = "El tipo de orden se cambió a: {} por {} el {}".format(
             dict(record._fields['tipo'].selection).get(new_value),
+            user.name,
+            timestamp
+        )
+        record.message_post(body=message)
+
+    def _log_custom_area_change(self, record, new_value):
+        user = self.env.user
+        timestamp = fields.Datetime.now()
+        message = "El área se cambió a: {} por {} el {}".format(
+            dict(record._fields['custom_area'].selection).get(new_value),
             user.name,
             timestamp
         )
