@@ -6,7 +6,6 @@
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
-                <!-- Insertar los campos planta, is_authorized, tipo y custom_area justo antes del notebook -->
                 <xpath expr="//notebook" position="before">
                     <group>
                         <field name="custom_delivery_address"/>
@@ -15,11 +14,10 @@
                         <field name="tipo"/>
                         <field name="custom_area"/>
                     </group>
-                    <!-- Nuevo grupo para los campos de vinculación de entidad -->
                     <group string="Vinculación de Entidad">
                         <field name="entity_type"/>
                         <field name="machine_id" invisible="entity_type != 'machine'"/>
-                        <field name="user_id" invisible="entity_type != 'user'" domain="[('groups_id.name', '=', 'Internal User')]"/>
+                        <field name="user_id" invisible="entity_type != 'user'"/>  <!-- Eliminado el dominio -->
                         <field name="event_id" invisible="entity_type != 'event'"/>
                         <field name="project_id" invisible="entity_type != 'project'"/>
                         <field name="task_id" invisible="entity_type != 'task'"/>
@@ -28,6 +26,7 @@
                 </xpath>
             </field>
         </record>
+
 
 
 
