@@ -14,10 +14,11 @@
                         <field name="tipo"/>
                         <field name="custom_area"/>
                     </group>
+                    <!-- Nuevo grupo para los campos de vinculación de entidad -->
                     <group string="Vinculación de Entidad">
                         <field name="entity_type"/>
                         <field name="machine_id" invisible="entity_type != 'machine'"/>
-                        <field name="user_id" invisible="entity_type != 'user'"/>  
+                        <field name="contact_id" invisible="entity_type != 'user'"/>  <!-- Usar el nuevo campo -->
                         <field name="event_id" invisible="entity_type != 'event'"/>
                         <field name="project_id" invisible="entity_type != 'project'"/>
                         <field name="task_id" invisible="entity_type != 'task'"/>
@@ -26,6 +27,7 @@
                 </xpath>
             </field>
         </record>
+
 
 
 
