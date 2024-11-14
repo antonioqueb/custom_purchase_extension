@@ -1,4 +1,4 @@
-from odoo import models, fields, api, SUPERUSER_ID
+from odoo import models, fields, api
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
@@ -87,7 +87,7 @@ class PurchaseOrder(models.Model):
         return res
 
     def _log_authorization_change(self, record, new_value):
-        if self.env.user.id == SUPERUSER_ID:
+        if self.env.user.id == 1:  # Verificar si el usuario es OdooBot
             return
         user = self.env.user
         timestamp = fields.Datetime.now()
@@ -99,7 +99,7 @@ class PurchaseOrder(models.Model):
         record.message_post(body=message)
 
     def _log_planta_change(self, record, new_value):
-        if self.env.user.id == SUPERUSER_ID:
+        if self.env.user.id == 1:  # Verificar si el usuario es OdooBot
             return
         user = self.env.user
         timestamp = fields.Datetime.now()
@@ -111,7 +111,7 @@ class PurchaseOrder(models.Model):
         record.message_post(body=message)
 
     def _log_tipo_change(self, record, new_value):
-        if self.env.user.id == SUPERUSER_ID:
+        if self.env.user.id == 1:  # Verificar si el usuario es OdooBot
             return
         user = self.env.user
         timestamp = fields.Datetime.now()
@@ -123,7 +123,7 @@ class PurchaseOrder(models.Model):
         record.message_post(body=message)
 
     def _log_custom_area_change(self, record, new_value):
-        if self.env.user.id == SUPERUSER_ID:
+        if self.env.user.id == 1:  # Verificar si el usuario es OdooBot
             return
         user = self.env.user
         timestamp = fields.Datetime.now()
@@ -164,7 +164,7 @@ class PurchaseOrder(models.Model):
         return ''
 
     def _log_prefix_change(self, record, old_prefix, new_prefix):
-        if self.env.user.id == SUPERUSER_ID:
+        if self.env.user.id == 1:  # Verificar si el usuario es OdooBot
             return
         user = self.env.user
         timestamp = fields.Datetime.now()
