@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, SUPERUSER_ID
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
@@ -39,7 +39,6 @@ class PurchaseOrder(models.Model):
     # Nuevo campo calculado para mostrar el estado personalizado
     custom_state_display = fields.Char(string='Estado Compra', compute='_compute_custom_state_display')
     custom_delivery_address = fields.Char(string='Dirección de Entrega')
-    # Campo para el Área
     custom_area = fields.Selection([
         ('none', 'Selecciona un área...'),  
         ('rh', 'Recursos Humanos'),
@@ -88,6 +87,8 @@ class PurchaseOrder(models.Model):
         return res
 
     def _log_authorization_change(self, record, new_value):
+        if self.env.user.id == SUPERUSER_ID:
+            return
         user = self.env.user
         timestamp = fields.Datetime.now()
         message = "El estado de autorización cambió a: {} por {} el {}".format(
@@ -98,6 +99,8 @@ class PurchaseOrder(models.Model):
         record.message_post(body=message)
 
     def _log_planta_change(self, record, new_value):
+        if self.env.user.id == SUPERUSER_ID:
+            return
         user = self.env.user
         timestamp = fields.Datetime.now()
         message = "La planta se cambió a: {} por {} el {}".format(
@@ -108,6 +111,8 @@ class PurchaseOrder(models.Model):
         record.message_post(body=message)
 
     def _log_tipo_change(self, record, new_value):
+        if self.env.user.id == SUPERUSER_ID:
+            return
         user = self.env.user
         timestamp = fields.Datetime.now()
         message = "El tipo de orden se cambió a: {} por {} el {}".format(
@@ -118,6 +123,8 @@ class PurchaseOrder(models.Model):
         record.message_post(body=message)
 
     def _log_custom_area_change(self, record, new_value):
+        if self.env.user.id == SUPERUSER_ID:
+            return
         user = self.env.user
         timestamp = fields.Datetime.now()
         message = "El área se cambió a: {} por {} el {}".format(
@@ -157,6 +164,8 @@ class PurchaseOrder(models.Model):
         return ''
 
     def _log_prefix_change(self, record, old_prefix, new_prefix):
+        if self.env.user.id == SUPERUSER_ID:
+            return
         user = self.env.user
         timestamp = fields.Datetime.now()
         message = "El prefijo de la orden cambió de: {} a {} por {} el {}".format(
