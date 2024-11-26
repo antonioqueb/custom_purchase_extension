@@ -41,6 +41,7 @@ class PurchaseOrder(models.Model):
     custom_delivery_address = fields.Char(string='Dirección de Entrega')
     custom_area = fields.Selection([
         ('none', 'Selecciona un área...'),  
+        ('dg', 'Dirección'),
         ('rh', 'Recursos Humanos'),
         ('seguridad', 'Seguridad'),
         ('mantenimiento_oper', 'Mantenimiento Operativo'),
