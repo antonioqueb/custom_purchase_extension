@@ -14,24 +14,21 @@
                         <field name="tipo"/>
                         <field name="custom_area"/>
                     </group>
-                    <!-- Nuevo grupo para los campos de vinculación de entidad -->
+                    <!-- Comentamos el grupo de Vinculación de Entidad -->
+                    <!--
                     <group string="Vinculación de Entidad">
                         <field name="entity_type"/>
                         <field name="machine_id" invisible="entity_type != 'machine'"/>
-                        <field name="contact_id" invisible="entity_type != 'user'"/>  <!-- Usar el nuevo campo -->
+                        <field name="contact_id" invisible="entity_type != 'user'"/>
                         <field name="event_id" invisible="entity_type != 'event'"/>
                         <field name="project_id" invisible="entity_type != 'project'"/>
                         <field name="task_id" invisible="entity_type != 'task'"/>
                         <field name="vehicle_id" invisible="entity_type != 'fleet'"/>
                     </group>
+                    -->
                 </xpath>
             </field>
         </record>
-
-
-
-
-
 
         <!-- Heredar la vista de árbol de purchase.order -->
         <record id="view_order_tree_inherit_custom" model="ir.ui.view">
@@ -57,7 +54,8 @@
                             decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
                             decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
                         <field name="custom_area" optional="show"/>
-                        <field name="entity_type" widget="selection" readonly="1" optional="show"/>
+                        <!-- Comentamos el campo entity_type -->
+                        <!-- <field name="entity_type" widget="selection" readonly="1" optional="show"/> -->
                         <field name="amount_total" sum="Importe total" widget="monetary" optional="show" decoration-bf="1"/>
                         <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
                         <field name="state" optional="hide" widget="badge" decoration-success="state == 'purchase' or state == 'done'" decoration-warning="state == 'to approve'" decoration-info="state in ('draft', 'sent')"/>
@@ -101,7 +99,8 @@
                             decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
                             decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
                         <field name="custom_area" optional="show"/>
-                        <field name="entity_type" widget="selection" readonly="1" optional="show"/>
+                        <!-- Comentamos el campo entity_type -->
+                        <!-- <field name="entity_type" widget="selection" readonly="1" optional="show"/> -->
                         <field name="amount_total" sum="Importe total" widget="monetary" optional="show" decoration-bf="1"/>
                         <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']" optional="hide"/>
                         <field name="state" optional="hide" widget="badge" decoration-success="state == 'purchase' or state == 'done'" decoration-warning="state == 'to approve'" decoration-info="state == 'draft' or state == 'sent'"/>
