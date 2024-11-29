@@ -13,6 +13,7 @@
                         <field name="planta"/>
                         <field name="tipo"/>
                         <field name="custom_area"/>
+                        <field name="metodo_pago" string="Método de Pago"/>
                     </group>
                     <!-- Comentamos el grupo de Vinculación de Entidad -->
                     <!--
@@ -54,6 +55,8 @@
                             decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
                             decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
                         <field name="custom_area" optional="show"/>
+                        <field name="metodo_pago" optional="show" string="Método de Pago"/>
+                
                         <!-- Comentamos el campo entity_type -->
                         <!-- <field name="entity_type" widget="selection" readonly="1" optional="show"/> -->
                         <field name="amount_total" sum="Importe total" widget="monetary" optional="show" decoration-bf="1"/>
@@ -100,6 +103,8 @@
                             decoration-warning="planta == 'planta_3'" decoration-danger="planta == 'planta_4'"
                             decoration-primary="planta == 'planta_5'" decoration-muted="planta == 'planta_6'" optional="show" readonly="1"/>
                         <field name="custom_area" optional="show"/>
+                        <field name="metodo_pago" optional="show" string="Método de Pago"/>
+                
                         <!-- Comentamos el campo entity_type -->
                         <!-- <field name="entity_type" widget="selection" readonly="1" optional="show"/> -->
                         <field name="amount_total" sum="Importe total" widget="monetary" optional="show" decoration-bf="1"/>
