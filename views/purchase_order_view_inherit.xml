@@ -84,10 +84,6 @@
                     <tree string="KPIs">
                        <header>
                             <button name="action_create_invoice" type="object" string="Crear facturas"/>
-                            <div>
-                                <label string="Importe Total: ${object.kpi_total_amount}" invisible="context.get('kpi_total_amount', False)"/>
-                                <label string="Número de Órdenes: ${object.kpi_order_count}" invisible="context.get('kpi_order_count', False)"/>
-                            </div>
                         </header>
 
 
