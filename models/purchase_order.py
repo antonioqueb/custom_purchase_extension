@@ -84,8 +84,6 @@ class PurchaseOrder(models.Model):
                 self._log_authorization_change(record, vals['is_authorized'])
             if 'planta' in vals:
                 self._log_planta_change(record, vals['planta'])
-            if 'metodo_pago' in vals:
-                self._log_planta_change(record, vals['metodo_pago'])
             if 'tipo' in vals:
                 self._log_tipo_change(record, vals['tipo'])
             if 'custom_area' in vals:
