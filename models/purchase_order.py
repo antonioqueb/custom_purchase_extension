@@ -50,7 +50,7 @@ class PurchaseOrder(models.Model):
         ('sac', 'Servicio de Atención al Cliente'),
     ], string='Área', default='none', required=False)
 
-        # **Nuevo campo: Método de Pago**
+    # **Nuevo campo: Método de Pago**
     metodo_pago = fields.Selection([
         ('transferencia', 'Transferencia'),
         ('efectivo', 'Efectivo'),
@@ -69,7 +69,8 @@ class PurchaseOrder(models.Model):
         self._update_sequence_prefix(record)
         self._log_planta_change(record, vals['planta'])
         self._log_tipo_change(record, vals['tipo'])
-
+        if 'metodo_pago' in vals:
+            self._log_metodo_pago_change(record, vals['metodo_pago'])
         return record
 
     def write(self, vals):
@@ -88,6 +89,8 @@ class PurchaseOrder(models.Model):
                 self._log_tipo_change(record, vals['tipo'])
             if 'custom_area' in vals:
                 self._log_custom_area_change(record, vals['custom_area'])
+            if 'metodo_pago' in vals:
+                self._log_metodo_pago_change(record, vals['metodo_pago'])
 
             new_prefix = self._get_current_prefix(record)
             if old_prefixes[record.id] != new_prefix:
@@ -139,6 +142,18 @@ class PurchaseOrder(models.Model):
         timestamp = fields.Datetime.now()
         message = "El área se cambió a: {} por {} el {}".format(
             dict(record._fields['custom_area'].selection).get(new_value),
+            user.name,
+            timestamp
+        )
+        record.message_post(body=message)
+
+    def _log_metodo_pago_change(self, record, new_value):
+        if self.env.user.id == 1:  # Verificar si el usuario es OdooBot
+            return
+        user = self.env.user
+        timestamp = fields.Datetime.now()
+        message = "El método de pago se cambió a: {} por {} el {}".format(
+            dict(record._fields['metodo_pago'].selection).get(new_value),
             user.name,
             timestamp
         )
