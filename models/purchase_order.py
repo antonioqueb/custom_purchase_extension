@@ -44,10 +44,19 @@ class PurchaseOrder(models.Model):
         ('dg', 'Dirección'),
         ('rh', 'Recursos Humanos'),
         ('seguridad', 'Seguridad'),
+        ('almacen_general', 'Almacén General'),
         ('mantenimiento_oper', 'Mantenimiento Operativo'),
         ('mantenimiento_gral', 'Mantenimiento General'),
         ('sac', 'Servicio de Atención al Cliente'),
     ], string='Área', default='none', required=False)
+
+        # **Nuevo campo: Método de Pago**
+    metodo_pago = fields.Selection([
+        ('transferencia', 'Transferencia'),
+        ('efectivo', 'Efectivo'),
+        ('tarjeta_rh', 'Tarjeta RH'),
+        ('tarjeta_a', 'Tarjeta A'),
+    ], string='Método de Pago', required=False)
 
     @api.model
     def create(self, vals):
