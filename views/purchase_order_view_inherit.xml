@@ -82,16 +82,11 @@
                 <!-- Reemplazar el nodo <tree> completo en la vista de KPIs -->
                 <xpath expr="//tree" position="replace">
                     <tree string="KPIs">
-                        <header>
-                            <button name="action_create_invoice" type="object" string="Crear facturas"/>
-                            <button type="object" string="Importe Total: ${object.kpi_total_amount}" invisible="context.get('kpi_total_amount', False)"/>
-                            <button type="object" string="Número de Órdenes: ${object.kpi_order_count}" invisible="context.get('kpi_order_count', False)"/>
-                        </header>
-                 <!--   <header>
+                       <header>
                             <button name="action_create_invoice" type="object" string="Crear facturas"/>
                             <button name="action_show_kpi_total_amount" type="object" string="Importe Total: ${object.kpi_total_amount}" invisible="context.get('kpi_total_amount', False)"/>
                             <button name="action_show_kpi_order_count" type="object" string="Número de Órdenes: ${object.kpi_order_count}" invisible="context.get('kpi_order_count', False)"/>
-                        </header>  -->
+                        </header> 
 
 
                         <field name="priority" optional="show" widget="priority" nolabel="1"/>
