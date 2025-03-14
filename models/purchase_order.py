@@ -98,6 +98,18 @@ class PurchaseOrder(models.Model):
             self._update_sequence_prefix(record)
 
         return res
+    
+    def copy(self, default=None):
+        if default is None:
+            default = {}
+        default['is_authorized'] = False
+        new_record = super(PurchaseOrder, self).copy(default)
+        user = self.env.user
+        timestamp = fields.Datetime.now()
+        new_record.message_post(body="Orden duplicada desde {} por {} el {}. Autorización restablecida a NO autorizado.".format(
+            self.name, user.name, timestamp
+        ))
+        return new_record
 
     def _log_authorization_change(self, record, new_value):
         if self.env.user.id == 1:  # Verificar si el usuario es OdooBot
