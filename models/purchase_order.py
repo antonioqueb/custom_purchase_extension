@@ -66,12 +66,21 @@ class PurchaseOrder(models.Model):
             vals['tipo'] = 'tipo_2'
 
         record = super(PurchaseOrder, self).create(vals)
-        self._update_sequence_prefix(record)
+
+        # Registrar cambios en historial al crear la orden
+        if 'is_authorized' in vals:
+            self._log_authorization_change(record, vals['is_authorized'])
         self._log_planta_change(record, vals['planta'])
         self._log_tipo_change(record, vals['tipo'])
+        if 'custom_area' in vals:
+            self._log_custom_area_change(record, vals['custom_area'])
         if 'metodo_pago' in vals:
             self._log_metodo_pago_change(record, vals['metodo_pago'])
+
+        self._update_sequence_prefix(record)
+        
         return record
+
 
     def write(self, vals):
         if self.env.context.get('skip_update_prefix'):
